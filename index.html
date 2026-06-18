@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biblioteca Virtual</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Georgia,serif;
+}
+
+body{
+    background:#d6c3a3;
+    height:100vh;
+    overflow:hidden;
+}
+
+/* LOGIN */
+
+#login{
+    position:absolute;
+    inset:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.loginBook{
+    width:350px;
+    height:450px;
+    background:#fffaf0;
+    padding:40px;
+    box-shadow:0 20px 40px rgba(0,0,0,.25);
+    border-radius:4px;
+    transition:1s;
+    transform-origin:left;
+}
+
+.loginBook h1{
+    text-align:center;
+    margin-bottom:40px;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    margin-bottom:15px;
+}
+
+button{
+    padding:12px 20px;
+    border:none;
+    cursor:pointer;
+    background:#6b4226;
+    color:white;
+}
+
+.loginBook.flip{
+    transform:rotateY(-180deg);
+    opacity:0;
+}
+
+/* ESTANTE */
+
+#library{
+    display:none;
+    height:100vh;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    gap:40px;
+}
+
+.shelf{
+    width:700px;
+    height:250px;
+    background:#6b4226;
+    border-radius:10px;
+    display:flex;
+    justify-content:center;
+    align-items:flex-end;
+    gap:25px;
+    padding:20px;
+}
+
+.book{
+    width:70px;
+    height:180px;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    cursor:pointer;
+    transition:.4s;
+    font-weight:bold;
+}
+
+.book:hover{
+    transform:translateY(-15px);
+}
+
+.red{background:#8b0000;}
+.blue{background:#003f88;}
+.green{background:#006400;}
+
+/* LEITOR */
+
+#reader{
+    display:none;
+    height:100vh;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+}
+
+.openBook{
+    width:900px;
+    height:550px;
+    display:flex;
+    box-shadow:0 20px 40px rgba(0,0,0,.25);
+}
+
+.page{
+    width:50%;
+    background:white;
+    padding:40px;
+    overflow:auto;
+}
+
+.left{
+    border-right:2px solid #ddd;
+}
+
+.controls{
+    margin-top:20px;
+    display:flex;
+    gap:20px;
+}
+
+.controls button{
+    width:120px;
+}
+
+h2{
+    margin-bottom:15px;
+}
+
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+
+<section id="login">
+
+<div class="loginBook" id="loginBook">
+
+<h1>Biblioteca</h1>
+
+<input placeholder="Usuário">
+<input type="password" placeholder="Senha">
+
+<button onclick="entrar()">Entrar</button>
+
+</div>
+
+</section>
+
+<!-- ESTANTE -->
+
+<section id="library">
+
+<h1>Escolha um Livro</h1>
+
+<div class="shelf">
+
+<div class="book red" onclick="abrirLivro(0)">Livro A</div>
+
+<div class="book blue" onclick="abrirLivro(1)">Livro B</div>
+
+<div class="book green" onclick="abrirLivro(2)">Livro C</div>
+
+</div>
+
+</section>
+
+<!-- LEITOR -->
+
+<section id="reader">
+
+<div class="openBook">
+
+<div class="page left" id="leftPage"></div>
+
+<div class="page right" id="rightPage"></div>
+
+</div>
+
+<div class="controls">
+
+<button onclick="anterior()">◀ Anterior</button>
+
+<button onclick="proxima()">Próxima ▶</button>
+
+</div>
+
+</section>
+
+<script>
+
+const livros = [
+
+[
+"Capa do Livro A",
+"Capítulo 1 - História do Livro A",
+"Capítulo 2 - Continuação",
+"Capítulo 3 - Desenvolvimento",
+"Fim do Livro A"
+],
+
+[
+"Capa do Livro B",
+"Introdução",
+"Conteúdo Principal",
+"Conclusão",
+"Fim do Livro B"
+],
+
+[
+"Capa do Livro C",
+"Página 1",
+"Página 2",
+"Página 3",
+"Fim do Livro C"
+]
+
+];
+
+let livroAtual = [];
+let paginaAtual = 0;
+
+function entrar(){
+
+document.getElementById("loginBook")
+.classList.add("flip");
+
+setTimeout(()=>{
+
+document.getElementById("login")
+.style.display="none";
+
+document.getElementById("library")
+.style.display="flex";
+
+},900);
+
+}
+
+function abrirLivro(indice){
+
+livroAtual = livros[indice];
+paginaAtual = 0;
+
+document.getElementById("library")
+.style.display="none";
+
+document.getElementById("reader")
+.style.display="flex";
+
+renderizar();
+
+}
+
+function renderizar(){
+
+document.getElementById("leftPage")
+.innerHTML =
+`<h2>${livroAtual[paginaAtual] || ""}</h2>`;
+
+document.getElementById("rightPage")
+.innerHTML =
+`<h2>${livroAtual[paginaAtual+1] || ""}</h2>`;
+
+}
+
+function proxima(){
+
+if(paginaAtual < livroAtual.length-2){
+
+paginaAtual += 2;
+renderizar();
+
+}
+
+}
+
+function anterior(){
+
+if(paginaAtual > 0){
+
+paginaAtual -= 2;
+renderizar();
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
